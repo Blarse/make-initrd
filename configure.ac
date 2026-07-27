@@ -18,6 +18,29 @@ AC_PROG_SED
 AC_PROG_YACC
 AC_PROG_LEX([noyywrap])
 
+AC_ARG_ENABLE([lto],
+	[AS_HELP_STRING([--enable-lto],
+			[build C programs with link-time optimization])],
+	[], [enable_lto=no])
+
+AS_CASE([$enable_lto],
+	[yes], [
+		AC_MSG_CHECKING([whether $CC supports link-time optimization])
+		saved_CFLAGS=$CFLAGS
+		saved_LDFLAGS=$LDFLAGS
+		CFLAGS="$CFLAGS -flto"
+		LDFLAGS="$LDFLAGS -flto"
+		AC_LINK_IFELSE(
+			[AC_LANG_PROGRAM([], [return 0;])],
+			[AC_MSG_RESULT([yes])],
+			[CFLAGS=$saved_CFLAGS
+			 LDFLAGS=$saved_LDFLAGS
+			 AC_MSG_RESULT([no])
+			 AC_MSG_FAILURE([$CC does not support link-time optimization])])
+	],
+	[no], [],
+	[AC_MSG_ERROR([bad value '$enable_lto' for --enable-lto])])
+
 m4_ifndef([PKG_PROG_PKG_CONFIG],
   [m4_fatal([Could not locate the pkg-config autoconf
     macros. These are usually located in /usr/share/aclocal/pkg.m4.

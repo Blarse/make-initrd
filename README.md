@@ -99,6 +99,13 @@ Developer/in-tree mode:
 make
 ```
 
+Build C programs with link-time optimization:
+
+```bash
+./configure --enable-lto
+make
+```
+
 ## Common Commands
 
 - Build images for configured targets:

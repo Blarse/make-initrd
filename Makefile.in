@@ -136,6 +136,7 @@ CFLAGS = @CFLAGS@ \
 	-Werror=shadow -Werror=missing-prototypes -Werror=implicit-function-declaration
 
 CPPFLAGS += @CPPFLAGS@ @DEFS@ -I$(CURDIR) -I$(CURDIR)/include
+LDFLAGS = @LDFLAGS@
 
 UDEVD		= @UDEVD@
 UDEVADM		= @UDEVADM@
