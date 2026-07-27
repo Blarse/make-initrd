@@ -59,7 +59,7 @@ jobs:
           echo "date=$(date +'%Y-%V')" > "$GITHUB_OUTPUT"
 
       - name: "Get Cache"
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         id: cache
         with:
           path: ~/.images/${{ inputs.vendor }}
@@ -84,7 +84,7 @@ jobs:
           test -c /dev/kvm && sudo chmod -v 666 /dev/kvm ||:
 
       - name: "Checkout Repository"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: "Checkout Submodules"
         run: |
@@ -115,7 +115,7 @@ jobs:
         run: testing/orchestrator.py ${{ inputs.vendor }} test-root-${{ matrix.testcase }} run-boot
 
       - name: "Archive Metrics"
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: "metrics-${{ inputs.vendor }}-${{ matrix.testcase }}"
           path: testing/status/artifact-*.txt
