@@ -25,7 +25,7 @@ def get_packages() -> PackageSet:
             "libcrypt-dev", "libjson-c-dev",
         ),
         kernel=("linux-generic",),
-        init=("systemd",),
+        init=("systemd","init",),
         sysimage_extra=(
             "pwgen", "mdadm", "lvm2", "cryptsetup", "btrfs-progs", "e2fsprogs",
             "xfsprogs", "dosfstools", "systemd-boot", "systemd-boot-efi", "grub-pc",
