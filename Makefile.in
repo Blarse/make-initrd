@@ -24,6 +24,8 @@ man1dir     = $(mandir)/man1
 tmpdir      = /tmp
 projectdir  = @projectdir@
 rulesdir    = ${projectdir}/mk
+kernelinstalldir = $(prefix)/lib/kernel/install.d
+kernelconfdir    = $(prefix)/lib/kernel/install.conf.d
 
 libcdir := $(shell $(CURDIR)/tools/get-libc-dir)
 completionsdir := $(shell pkg-config --variable=completionsdir bash-completion 2>/dev/null ||:)
@@ -445,6 +447,10 @@ install: build-progs build-manpages installdirs
 	$(Q)cp -at "$(DESTDIR)$(runtimedir)/$(libcdir)" -- $(dest_data_libdir)/lib*
 	$(Q)[ -z "$(completionsdir)" ] || \
 	    cp -at "$(DESTDIR)$(completionsdir)" -- $(wildcard contrib/bash-completion/*)
+	$(Q)[ -z "$(kernelinstalldir)" ] || { \
+	    mkdir -p -- "$(DESTDIR)$(kernelinstalldir)" "$(DESTDIR)$(kernelconfdir)" && \
+	    cp -at "$(DESTDIR)$(kernelinstalldir)" -- $(wildcard contrib/kernel-install/*.install) && \
+	    cp -at "$(DESTDIR)$(kernelconfdir)" -- $(wildcard contrib/kernel-install/*.conf); }
 ifneq ($(SCDOC),)
 	$(Q)cp -at "$(DESTDIR)$(man1dir)" -- $(addprefix $(dest_man1dir)/,$(MANPAGE_NAMES))
 endif
@@ -461,4 +467,7 @@ uninstall:
 	$(Q)rm -f -- $(addprefix $(DESTDIR)$(man1dir)/,$(MANPAGE_NAMES))
 	$(Q)[ -z "$(completionsdir)" ] || \
 	    rm -f -- $(addprefix $(DESTDIR)$(completionsdir)/,$(notdir $(wildcard contrib/bash-completion/*)))
+	$(Q)[ -z "$(kernelinstalldir)" ] || \
+	    rm -f -- $(addprefix $(DESTDIR)$(kernelinstalldir)/,$(notdir $(wildcard contrib/kernel-install/*.install))) \
+	          $(addprefix $(DESTDIR)$(kernelconfdir)/,$(notdir $(wildcard contrib/kernel-install/*.conf)))
 	$(Q)rm -rf -- $(DESTDIR)$(rulesdir) $(DESTDIR)$(projectdir) $(DESTDIR)$(execdir) $(DESTDIR)$(runtimedir)
