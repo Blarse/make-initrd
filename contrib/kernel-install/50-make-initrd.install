@@ -8,22 +8,26 @@ KERNEL_VERSION="$2"
 KERNEL_IMAGE="${4-}"
 
 [ "$COMMAND" = add ] || exit 0
-
-# initrd passed on the command line
-[ "$#" -le 4 ] || exit 0
-
 [ "${KERNEL_INSTALL_IMAGE_TYPE-}" != uki ] || exit 0
-[ "${KERNEL_INSTALL_INITRD_GENERATOR:-make-initrd}" = make-initrd ] || exit 0
 
 STAGING="${KERNEL_INSTALL_STAGING_AREA:?}"
 
 verbose=
 [ "${KERNEL_INSTALL_VERBOSE:-0}" -eq 0 ] || verbose=-v
 
+# The uki feature always builds its own initrd, so an initrd passed on the
+# command line cannot be embedded.
 if [ "${KERNEL_INSTALL_LAYOUT-}" = uki ] && [ "${KERNEL_INSTALL_UKI_GENERATOR-}" = make-initrd ]; then
+	[ "$#" -le 4 ] ||
+		echo "$0: warning: the initrd given on the command line is not embedded into the UKI" >&2
 	exec make-initrd $verbose uki -k "$KERNEL_VERSION" \
 		UKI_VMLINUZ="$KERNEL_IMAGE" UKI_IMAGEFILE="$STAGING/uki.efi"
 fi
+
+# initrd passed on the command line
+[ "$#" -le 4 ] || exit 0
+
+[ "${KERNEL_INSTALL_INITRD_GENERATOR:-make-initrd}" = make-initrd ] || exit 0
 
 # reuse initrd shipped next to the kernel image
 if [ -n "$KERNEL_IMAGE" ] && [ -f "${KERNEL_IMAGE%/*}/initrd" ]; then

@@ -10,4 +10,7 @@ The plugin is active when `initrd_generator` is `make-initrd` or unset.
 `/etc/kernel/install.conf`.
 
 With `layout=uki` and `uki_generator=make-initrd` the plugin builds a
-unified kernel image with the `uki` feature instead.
+unified kernel image with the `uki` feature instead, regardless of
+`initrd_generator`. The `uki` feature always builds its own initramfs, so
+the image is built even when an initrd is passed on the command line; that
+initrd is not embedded, and the plugin warns about it.
