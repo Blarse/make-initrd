@@ -78,7 +78,7 @@ for ent in "$BOOTDIR"/loader/entries/*.conf; do
 	[ -z "$architecture" ] || [ "$architecture" = "$efi_type" ] ||
 		continue
 
-	[ "$version" = "$kverion" ] ||
+	[ "$version" = "$kversion" ] ||
 		continue
 
 	[ -n "$linux" ] ||
